@@ -1,26 +1,39 @@
 const { assert } = require('chai');
+const sinon = require('sinon');
 const request = require('supertest');
-const app = require('../server/app1');
+const { app1, user } = require('../server/app1');
 
+describe('app1 test', function () {
+	let fakeGetUserInfo;
 
-describe('app2', function () {
-	it('msg should be hello, server2 ', function (done) {
-		request(app)
+	before(function () {
+		fakeGetUserInfo = sinon.stub(user, 'getUserInfo');
+		fakeGetUserInfo.returns({
+			age: 20,
+    	gender: 'male',
+    	hobbies: ['swimming'],
+		})
+	});
+
+	after(() => {
+		fakeGetUserInfo.restore();
+	});
+
+	it('this should return user\'s info',function (done) {
+		request(app1)
 			.get('/')
-			.expect(function (res) {
-				assert.equal(res.body.msg, 'hello, server2');
+			.type('application/json')
+			.send({
+				"name": "admin",
+				"passwd": "root"
 			})
-			.expect(200, done);
-	});	
-});
-
-describe('app1', function () {
-	it('', function (done) {
-		request(app)
-			.get('/')
+			.expect('Content-Type','application/json; charset=utf-8')
 			.expect(function (res) {
-				console.log(res.body);
+				const userInfo = res.body.userInfo
+				assert.equal(userInfo.age, 20);
+				assert.equal(userInfo.gender, 'male');
+				assert.equal(userInfo.hobbies[0], 'swimming');
 			})
-			.expect(200, done);
+      .expect(200, done);
 	});
 });
