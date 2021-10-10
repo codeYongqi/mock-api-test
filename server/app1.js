@@ -1,26 +1,44 @@
-const axios = require('axios')
+const axios = require('axios').default;
 const express = require('express');
-const app = express()
+const app1 = express()
 const port = 3000
 
-app.use(express.json());
-app.get('/', (req, res) => {
+app1.use(express.json());
 
-  let res2;
+const user = {
+  getUserInfo: function () {
+    return new Promise((resolve, reject) => {
+      axios
+      .get('http://localhost:5000/userInfo')
+      .then(function (response) {
+        resolve(response.data)
+      })
+      .catch(function (error) {
+        reject(err);
+      })
+    })
+  }
+}
 
-  (async () => {
-    res2 = await axios.get('http://localhost:5000/');
-  res.send({
-    res1: 'res1',
-    res2: res2.data
-  })
-  })();
-
+app1.get('/', async (req, res) => {
+  if (
+    req.body.name === 'admin' 
+    && req.body.passwd === 'root'
+  ) {
+    const userInfo = await user.getUserInfo();
+    res.json({
+      userInfo  
+    })
+  } else {
+    res.json({
+      msg: 'wrong username or password'
+    })
+  }
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app1.listen(port, () => {
+  console.log(`Example app1 listening at http://localhost:${port}`)
 })
 
-module.exports = app;
+module.exports = { app1, user };
 
