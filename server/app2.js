@@ -1,16 +1,19 @@
 const express = require('express')
-const app = express()
+const app2 = express();
 const port = 5000
 
-app.use(express.json());
-app.get('/', (req, res) => {
+app2.use(express.json());
+
+app2.get('/userInfo', (req, res) => {
   res.json({
-    msg: 'hello, server2',
+    age: 20,
+    gender: 'male',
+    hobbies: ['swimming'],
   })
+});
+
+app2.listen(port, () => {
+  console.log(`Example app2 listening at http://localhost:${port}`)
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
-
-module.exports = app;
+module.exports = app2;
