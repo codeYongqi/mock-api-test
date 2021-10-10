@@ -21,7 +21,12 @@
   "homepage": "https://github.com/codeYongqi/mock-api-test#readme",
   "dependencies": {
     "axios": "^0.22.0",
+    "chai": "^4.3.4",
     "express": "^4.17.1",
-    "superagent": "^6.1.0"
+    "nyc": "^15.1.0",
+    "sinon": "^11.1.2",
+    "sinon-express-mock": "^2.2.1",
+    "superagent": "^6.1.0",
+    "supertest": "^6.1.6"
   }
 }
