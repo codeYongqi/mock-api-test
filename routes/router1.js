@@ -1,14 +1,13 @@
-const axios = require('axios').default;
+const got = require('got');
 const express = require('express');
 const router1 = express.Router();
 
 const user = {
   getUserInfo: function () {
     return new Promise((resolve, reject) => {
-      axios
-      .get('http://localhost:3000/userInfo')
+      got('http://localhost:3000/userInfo')
       .then(function (response) {
-        resolve(response.data)
+        resolve(response.body)
       })
       .catch(function (error) {
         reject(err);
@@ -22,10 +21,12 @@ router1.post('/', async (req, res) => {
     req.body.name === 'admin' 
     && req.body.passwd === 'root'
   ) {
-    const userInfo = await user.getUserInfo();
+    let userInfo = await user.getUserInfo();
+		userInfo = JSON.parse(userInfo);
+
     res.json({
-      userInfo  
-    })
+			userInfo
+		})
   } else {
     res.json({
       msg: 'wrong username or password'
