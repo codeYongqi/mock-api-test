@@ -1,39 +1,46 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 const request = require('supertest');
-const { app1, user } = require('../server/app1');
+const app = require('../app');
+const { user } = require('../routes/router1');
 
-describe('app1 test', function () {
+describe('router1 test', function () {
+	/*
 	let fakeGetUserInfo;
 
-	before(function () {
-		fakeGetUserInfo = sinon.stub(user, 'getUserInfo');
-		fakeGetUserInfo.returns({
-			age: 20,
-    	gender: 'male',
-    	hobbies: ['swimming'],
+		before(function () {
+			fakeGetUserInfo = sinon.stub(user, 'getUserInfo');
+			fakeGetUserInfo.returns({
+				age: 20,
+				gender: 'male',
+				hobbies: ['swimming'],
+			})
+		});
+	
+		after(() => {
+			fakeGetUserInfo.restore();
+		});
+		*/
+
+	const agent = request.agent(app);
+	agent.set('Accept', 'application/json')
+
+	it('this should return user\'s info', function (done) {
+		const body = {
+			"name": "admin",
+			"passwd": "root"
+		}
+
+		agent
+		.post('/')
+		.send(body)
+		.expect(function (res) {
+			let body = res.body.userInfo;
+			console.log(body)
+			assert.equal(body.age, 20);
+			assert.equal(body.gender, 'male');
 		})
-	});
-
-	after(() => {
-		fakeGetUserInfo.restore();
-	});
-
-	it('this should return user\'s info',function (done) {
-		request(app1)
-			.get('/')
-			.type('application/json')
-			.send({
-				"name": "admin",
-				"passwd": "root"
-			})
-			.expect('Content-Type','application/json; charset=utf-8')
-			.expect(function (res) {
-				const userInfo = res.body.userInfo
-				assert.equal(userInfo.age, 20);
-				assert.equal(userInfo.gender, 'male');
-				assert.equal(userInfo.hobbies[0], 'swimming');
-			})
-      .expect(200, done);
+		.expect(200, done);
 	});
 });
+
