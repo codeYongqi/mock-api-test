@@ -8,8 +8,5 @@ app.use(express.json());
 app.use(router1);
 app.use(router2);
 
-app.listen(port, () => {
-  console.log(`Example app2 listening at http://localhost:${port}`)
-})
 
 module.exports = app;
